@@ -1,6 +1,6 @@
+# README
 **﻿Thid Document contains step for Deployment**
 
-# content
 Please follow the steps on how to use the code and deployment - 
 1. Any of the code pushed to main repository will trigger the pipeline acr-deploy.yml
 2. Main function of the pipeline is to build docker image and push to ACR .
