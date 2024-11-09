@@ -1,3 +1,10 @@
+trigger:
+  branches:
+    include:
+      - main  # This triggers the pipeline on changes to the 'main' branch
+  paths:
+    include:
+      - 'terraform/**/*'  
 pool:
   name: demo-vm  # Use your agent pool here (can be self-hosted or Microsoft-hosted)
   
