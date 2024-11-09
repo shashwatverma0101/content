@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: static-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: static-app
+  template:
+    metadata:
+      labels:
+        app: static-app
+    spec:
+      containers:
+      - name: static-app-container
+        image: practiceregistery.azurecr.io/static:latest
+        ports:
+        - containerPort: 80
