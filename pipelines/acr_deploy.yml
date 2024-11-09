@@ -1,0 +1,30 @@
+trigger:
+- main  # This triggers the pipeline when there's a change in the 'main' branch
+
+pool:
+  name: demo-vm  # Use your agent pool here, this can be a self-hosted agent pool or Microsoft-hosted agent pool
+
+variables:
+  azureSubscription: 'demoservice'  # The name of the service connection you created
+  acrName: 'practiceregistery'  # Replace with your Azure Container Registry name
+  imageName: 'static:latest'  # Docker image name
+  imageTag: $(Build.BuildId)  # Use the build ID as the image tag
+
+jobs:
+- job: BuildAndPush
+  displayName: 'Build and Push Docker Image to ACR'
+  steps:
+  - task: UseDocker@2
+    inputs:
+      containerRegistry: $(azureSubscription)  # Azure Service Connection for authentication
+      repository: $(acrName).azurecr.io/$(imageName)  # ACR repository path
+      command: build
+      Dockerfile: '**/Dockerfile'  # Path to the Dockerfile (you can adjust the path if needed)
+      tags: $(imageTag)
+
+  - task: UseDocker@2
+    inputs:
+      containerRegistry: $(azureSubscription)  # Same service connection for authentication
+      repository: $(acrName).azurecr.io/$(imageName)  # ACR repository path
+      command: push
+      tags: $(imageTag) 

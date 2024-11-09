@@ -1,0 +1,32 @@
+pool:
+  name: demo-vm  # Use your agent pool here (can be self-hosted or Microsoft-hosted)
+  
+variables:
+  azureServiceConnection: 'demoservice'  # Azure service connection name
+  terraformVersion: '1.0.11'  # Specify the Terraform version you want to use
+
+jobs:
+- job: Terraform_Deploy
+  displayName: 'Deploy infrastructure using Terraform'
+  steps:
+
+  # Step 1: Install Terraform
+  - task: UseTerraform@0
+    inputs:
+      version: $(terraformVersion)
+
+  # Step 2: Terraform Init
+  - script: terraform init
+    displayName: 'Initialize Terraform'
+
+  # Step 3: Terraform Plan (optional but recommended)
+  - script: terraform plan -out=tfplan
+    displayName: 'Terraform Plan'
+
+  # Step 4: Terraform Apply
+  - script: terraform apply -auto-approve tfplan
+    displayName: 'Terraform Apply'
+
+  # Optional: Destroy Terraform Infrastructure (if you want to clean up resources)
+  # - script: terraform destroy -auto-approve
+  #   displayName: 'Terraform Destroy'
