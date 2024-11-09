@@ -9,7 +9,7 @@ variables:
   acrName: 'practiceregistery'  # Replace with your Azure Container Registry name
   imageName: 'static:latest'  # Docker image name
   imageTag: $(Build.BuildId)  # Use the build ID as the image tag
-
+  manifestPath: '../manifests/'
 jobs:
 - job: BuildAndPush
   displayName: 'Build and Push Docker Image to ACR'
@@ -28,3 +28,14 @@ jobs:
       repository: $(acrName).azurecr.io/$(imageName)  # ACR repository path
       command: push
       tags: $(imageTag) 
+
+
+   - script: |
+      kubectl apply -f $(Build.SourcesDirectory)/$(manifestPath)/deployment.yaml -n $(kubernetesNamespace)
+    displayName: 'Apply Kubernetes Manifest (Deployment)'
+
+  - script: |
+      kubectl apply -f $(Build.SourcesDirectory)/$(manifestPath)/service.yaml -n $(kubernetesNamespace)
+    displayName: 'Apply Kubernetes Manifest (Service)'
+
+  
